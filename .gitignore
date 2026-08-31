@@ -1,0 +1,29 @@
+# ESP-IDF SDK (3.5GB external framework, not project code)
+esp/
+
+# Build artifacts
+**/build/
+*.bin
+*.elf
+*.map
+
+# Python
+__pycache__/
+*.pyc
+
+# OS
+.DS_Store
+
+# Editor
+.vscode/
+.idea/
+
+# Stale backup files created during development
+*.bak
+*.bak2
+sdkconfig.old
+
+# Competition application documents (may contain personal info)
+임베디드SW경진대회 */
+
+*.pptx

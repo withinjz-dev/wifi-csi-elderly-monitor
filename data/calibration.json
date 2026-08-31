@@ -1,0 +1,18 @@
+{
+  "desk": {
+    "rssi_move_threshold": 1.482,
+    "breath_snr_threshold": 4.202
+  },
+  "bed": {
+    "rssi_move_threshold": 3.373,
+    "breath_snr_threshold": 3.282
+  },
+  "floor_boards_bed_person": {
+    "rssi_move_threshold": 1.219,
+    "breath_snr_threshold": 4.083
+  },
+  "floor": {
+    "rssi_move_threshold": 6.32,
+    "breath_snr_threshold": 5.698
+  }
+}
