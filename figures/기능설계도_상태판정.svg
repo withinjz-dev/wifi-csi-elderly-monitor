@@ -1,0 +1,119 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720" font-family="'Apple SD Gothic Neo','Malgun Gothic','Noto Sans KR','Nanum Gothic',sans-serif">
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#37474f"/>
+    </marker>
+  </defs>
+
+  <rect width="1280" height="720" fill="#ffffff"/>
+
+  <text x="40" y="46" font-size="26" font-weight="700" fill="#1c2833">기능 설계도 — 상태 판정 분기</text>
+  <text x="40" y="72" font-size="15" fill="#607d8b">10초마다 1회 판정 · 경보는 지속·시간대·재실 세 조건을 모두 통과해야 발동</text>
+
+  <!-- start -->
+  <rect x="70" y="108" width="180" height="46" rx="23" fill="#eceff1" stroke="#78909c"/>
+  <text x="160" y="137" text-anchor="middle" font-size="15" font-weight="700" fill="#1c2833">윈도우 (25.6초)</text>
+
+  <!-- D1 데이터 -->
+  <path d="M160 178 L305 224 L160 270 L15 224 Z" fill="#ffffff" stroke="#546e7a" stroke-width="1.6"/>
+  <text x="160" y="219" text-anchor="middle" font-size="14" font-weight="700" fill="#1c2833">CSI 데이터가</text>
+  <text x="160" y="238" text-anchor="middle" font-size="14" font-weight="700" fill="#1c2833">들어왔는가?</text>
+
+  <!-- NO_DATA branch -->
+  <rect x="360" y="200" width="150" height="48" rx="6" fill="#eceff1" stroke="#78909c"/>
+  <text x="435" y="230" text-anchor="middle" font-size="15" font-weight="700" fill="#455a64">NO_DATA</text>
+
+  <rect x="560" y="200" width="180" height="48" rx="6" fill="#ffffff" stroke="#78909c"/>
+  <text x="650" y="223" text-anchor="middle" font-size="13" fill="#1c2833">60초 지속?</text>
+  <text x="650" y="240" text-anchor="middle" font-size="11" fill="#78909c">시간대 무관</text>
+
+  <rect x="790" y="196" width="230" height="56" rx="6" fill="#fff3e0" stroke="#e67e22" stroke-width="2"/>
+  <text x="905" y="219" text-anchor="middle" font-size="15" font-weight="700" fill="#a04000">FAULT</text>
+  <text x="905" y="239" text-anchor="middle" font-size="12" fill="#a04000">LED만 · 부저 없음</text>
+
+  <text x="1035" y="215" font-size="12" fill="#7f8c8d">센서가 방을</text>
+  <text x="1035" y="231" font-size="12" fill="#7f8c8d">못 보는 상태</text>
+  <text x="1035" y="247" font-size="12" fill="#7f8c8d">(고장·전원 차단)</text>
+
+  <!-- D2 움직임 -->
+  <path d="M160 300 L305 346 L160 392 L15 346 Z" fill="#ffffff" stroke="#546e7a" stroke-width="1.6"/>
+  <text x="160" y="341" text-anchor="middle" font-size="14" font-weight="700" fill="#1c2833">움직임</text>
+  <text x="160" y="360" text-anchor="middle" font-size="14" font-weight="700" fill="#1c2833">감지?</text>
+
+  <rect x="360" y="322" width="150" height="48" rx="6" fill="#e9f5ec" stroke="#27ae60"/>
+  <text x="435" y="352" text-anchor="middle" font-size="15" font-weight="700" fill="#1d6b3f">ACTIVE</text>
+  <text x="530" y="352" font-size="12" fill="#7f8c8d">활동 중 (정상)</text>
+
+  <!-- D3 호흡 -->
+  <path d="M160 422 L305 468 L160 514 L15 468 Z" fill="#ffffff" stroke="#546e7a" stroke-width="1.6"/>
+  <text x="160" y="463" text-anchor="middle" font-size="14" font-weight="700" fill="#1c2833">호흡 주기성이</text>
+  <text x="160" y="482" text-anchor="middle" font-size="14" font-weight="700" fill="#1c2833">있는가?</text>
+
+  <rect x="360" y="444" width="150" height="48" rx="6" fill="#e9f5ec" stroke="#27ae60"/>
+  <text x="435" y="467" text-anchor="middle" font-size="14" font-weight="700" fill="#1d6b3f">SLEEP_NORMAL</text>
+  <text x="435" y="484" text-anchor="middle" font-size="11" fill="#1d6b3f">수면 중 (정상)</text>
+  <text x="530" y="474" font-size="12" fill="#7f8c8d">PIR이 구분하지 못하던 상태</text>
+
+  <!-- NO_RESPONSE -->
+  <rect x="70" y="552" width="180" height="48" rx="6" fill="#fdecea" stroke="#c0392b"/>
+  <text x="160" y="582" text-anchor="middle" font-size="15" font-weight="700" fill="#922b21">NO_RESPONSE</text>
+
+  <!-- gate 1 -->
+  <rect x="330" y="548" width="200" height="56" rx="6" fill="#ffffff" stroke="#78909c"/>
+  <text x="430" y="571" text-anchor="middle" font-size="13" font-weight="700" fill="#1c2833">60초 지속?</text>
+  <text x="430" y="590" text-anchor="middle" font-size="12" fill="#5d6d7e">AND 수면시간대(22~7시)?</text>
+
+  <!-- gate 2 재실 -->
+  <rect x="580" y="536" width="290" height="80" rx="6" fill="#f4ecf7" stroke="#7d3c98" stroke-width="1.8"/>
+  <text x="725" y="558" text-anchor="middle" font-size="13" font-weight="700" fill="#5b2c6f">재실 확인</text>
+  <text x="725" y="577" text-anchor="middle" font-size="11.5" fill="#5b2c6f">· 폰이 AP에 결합되어 있는가?  [주]</text>
+  <text x="725" y="593" text-anchor="middle" font-size="11.5" fill="#5b2c6f">· CSI 이탈 버스트가 있었는가?  [보조]</text>
+  <text x="725" y="609" text-anchor="middle" font-size="11" fill="#7d3c98">하나라도 "외출"이면 억제</text>
+
+  <!-- emergency -->
+  <rect x="920" y="536" width="230" height="80" rx="6" fill="#fdecea" stroke="#c0392b" stroke-width="2.4"/>
+  <text x="1035" y="565" text-anchor="middle" font-size="17" font-weight="700" fill="#922b21">EMERGENCY</text>
+  <text x="1035" y="587" text-anchor="middle" font-size="13" fill="#922b21">LED + 부저</text>
+  <text x="1035" y="605" text-anchor="middle" font-size="11" fill="#922b21">방은 보이는데 호흡이 없음</text>
+
+  <!-- arrows -->
+  <g stroke="#37474f" stroke-width="1.6" fill="none" marker-end="url(#a)">
+    <path d="M160 154 V172"/>
+    <path d="M305 224 H352"/>
+    <path d="M510 224 H552"/>
+    <path d="M740 224 H782"/>
+    <path d="M160 270 V294"/>
+    <path d="M305 346 H352"/>
+    <path d="M160 392 V416"/>
+    <path d="M305 468 H352"/>
+    <path d="M160 514 V546"/>
+    <path d="M250 576 H322"/>
+    <path d="M530 576 H572"/>
+    <path d="M870 576 H912"/>
+  </g>
+
+  <!-- branch labels -->
+  <g font-size="12" font-weight="700" fill="#c0392b">
+    <text x="328" y="216">아니오</text>
+    <text x="761" y="216" text-anchor="middle">예</text>
+  </g>
+  <g font-size="12" font-weight="700" fill="#1d6b3f">
+    <text x="328" y="338">예</text>
+    <text x="328" y="460">예</text>
+  </g>
+  <g font-size="12" font-weight="700" fill="#37474f">
+    <text x="172" y="288">예</text>
+    <text x="172" y="410">아니오</text>
+    <text x="172" y="532">아니오</text>
+    <text x="551" y="568" text-anchor="middle">예</text>
+    <text x="891" y="568" text-anchor="middle">재실</text>
+  </g>
+
+  <!-- note box -->
+  <rect x="40" y="644" width="1200" height="46" rx="6" fill="#eceff1" stroke="#b0bec5"/>
+  <text x="60" y="664" font-size="12.5" fill="#37474f" font-weight="700">설계 원칙</text>
+  <text x="132" y="664" font-size="12.5" fill="#37474f">경보를 억제하는 "외출" 판정에만 적극적 근거를 요구하고, 불확실하면 "재실"로 판정한다 — 경보를 유지하는 방향이 안전하다.</text>
+  <text x="60" y="681" font-size="12" fill="#607d8b">센서 고장(FAULT)과 사람 이상(EMERGENCY)은 카운터부터 분리되어 있다. 실기 테스트에서 전원이 끊긴 송신기가 응급 부저를 울린 결함을 수정한 결과.</text>
+
+  <text x="1240" y="712" text-anchor="end" font-size="12" fill="#90a4ae">개발완료보고서 2.3절 · 3.3(6) · 3.4절</text>
+</svg>

@@ -1,0 +1,151 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720" font-family="'Apple SD Gothic Neo','Malgun Gothic','Noto Sans KR','Nanum Gothic',sans-serif">
+  <defs>
+    <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#37474f"/>
+    </marker>
+    <marker id="arw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#8d6e63"/>
+    </marker>
+  </defs>
+
+  <rect width="1280" height="720" fill="#ffffff"/>
+
+  <!-- title -->
+  <text x="40" y="46" font-size="26" font-weight="700" fill="#1c2833">기능 설계도 — 전 과정 ESP32 내부</text>
+  <text x="40" y="72" font-size="15" fill="#607d8b">호스트 PC 불필요 · 시리얼 출력은 개발용 상태 표시 전용</text>
+
+  <!-- ============ threading band ============ -->
+  <rect x="40" y="94" width="1200" height="96" rx="8" fill="#eceff1" stroke="#b0bec5"/>
+  <text x="56" y="116" font-size="13" font-weight="700" fill="#546e7a">스레딩 구조 (FreeRTOS)</text>
+
+  <g font-size="14" fill="#1c2833">
+    <rect x="60" y="126" width="150" height="46" rx="6" fill="#ffffff" stroke="#78909c"/>
+    <text x="135" y="147" text-anchor="middle" font-weight="700">WiFi 태스크</text>
+    <text x="135" y="164" text-anchor="middle" font-size="11" fill="#78909c">우선순위 23</text>
+
+    <rect x="330" y="126" width="140" height="46" rx="6" fill="#ffffff" stroke="#78909c"/>
+    <text x="400" y="147" text-anchor="middle" font-weight="700">xQueue</text>
+    <text x="400" y="164" text-anchor="middle" font-size="11" fill="#78909c">길이 16</text>
+
+    <rect x="560" y="126" width="150" height="46" rx="6" fill="#ffffff" stroke="#78909c"/>
+    <text x="635" y="147" text-anchor="middle" font-weight="700">CSI 태스크</text>
+    <text x="635" y="164" text-anchor="middle" font-size="11" fill="#78909c">우선순위 4</text>
+
+    <rect x="800" y="126" width="150" height="46" rx="6" fill="#ffffff" stroke="#78909c"/>
+    <text x="875" y="147" text-anchor="middle" font-weight="700">링버퍼</text>
+    <text x="875" y="164" text-anchor="middle" font-size="11" fill="#78909c">256 float</text>
+
+    <rect x="1040" y="126" width="180" height="46" rx="6" fill="#ffffff" stroke="#78909c"/>
+    <text x="1130" y="147" text-anchor="middle" font-weight="700">판정 태스크</text>
+    <text x="1130" y="164" text-anchor="middle" font-size="11" fill="#78909c">우선순위 3 · 10초 주기</text>
+  </g>
+
+  <g stroke="#37474f" stroke-width="1.6" marker-end="url(#ar)" fill="none">
+    <path d="M210 149 H322"/>
+    <path d="M470 149 H552"/>
+    <path d="M710 149 H792"/>
+    <path d="M950 149 H1032"/>
+  </g>
+  <text x="266" y="138" text-anchor="middle" font-size="11" fill="#546e7a">CSI 콜백 (memcpy만)</text>
+
+  <!-- ============ three stage panels ============ -->
+  <!-- panel 1 -->
+  <rect x="40" y="222" width="380" height="418" rx="10" fill="#e8f1f8" stroke="#90a4ae"/>
+  <text x="60" y="248" font-size="15" font-weight="700" fill="#1a5276">1. 취득</text>
+  <text x="120" y="248" font-size="12" fill="#5d6d7e">edge_csi.h</text>
+
+  <g font-size="14" fill="#1c2833">
+    <rect x="66" y="266" width="328" height="58" rx="6" fill="#ffffff" stroke="#7f8c8d"/>
+    <text x="230" y="290" text-anchor="middle" font-weight="700">원시 CSI</text>
+    <text x="230" y="310" text-anchor="middle" font-size="12" fill="#5d6d7e">52 서브캐리어 I/Q · 128 B/프레임</text>
+
+    <rect x="66" y="352" width="328" height="58" rx="6" fill="#ffffff" stroke="#7f8c8d"/>
+    <text x="230" y="376" text-anchor="middle" font-weight="700">선별 8개 서브캐리어 power</text>
+    <text x="230" y="396" text-anchor="middle" font-size="12" fill="#5d6d7e">I² + Q² · sqrt 생략</text>
+
+    <rect x="66" y="438" width="328" height="58" rx="6" fill="#ffffff" stroke="#7f8c8d"/>
+    <text x="230" y="462" text-anchor="middle" font-weight="700">100 ms 시간 빈</text>
+    <text x="230" y="482" text-anchor="middle" font-size="12" fill="#5d6d7e">균일 10 Hz 스트림으로 정렬</text>
+
+    <rect x="66" y="524" width="328" height="66" rx="6" fill="#fff8e1" stroke="#c9a227" stroke-width="1.8"/>
+    <text x="230" y="548" text-anchor="middle" font-weight="700">링버퍼 256 샘플</text>
+    <text x="230" y="568" text-anchor="middle" font-size="12" fill="#7d6608">25.6초 창 = 1 kB</text>
+    <text x="230" y="583" text-anchor="middle" font-size="11" fill="#7d6608">원시 저장 시 창당 23 kB</text>
+  </g>
+  <g stroke="#37474f" stroke-width="1.6" marker-end="url(#ar)" fill="none">
+    <path d="M230 324 V344"/>
+    <path d="M230 410 V430"/>
+    <path d="M230 496 V516"/>
+  </g>
+  <text x="230" y="618" text-anchor="middle" font-size="12" fill="#7d6608" font-weight="700">데이터 23배 축소</text>
+
+  <!-- panel 2 -->
+  <rect x="450" y="222" width="380" height="418" rx="10" fill="#e9f5ec" stroke="#90a4ae"/>
+  <text x="470" y="248" font-size="15" font-weight="700" fill="#1d6b3f">2. 분석</text>
+  <text x="530" y="248" font-size="12" fill="#5d6d7e">edge_dsp.h</text>
+
+  <g font-size="14" fill="#1c2833">
+    <rect x="476" y="266" width="328" height="58" rx="6" fill="#ffffff" stroke="#7f8c8d"/>
+    <text x="640" y="290" text-anchor="middle" font-weight="700">최소자승 직선 추세 제거</text>
+    <text x="640" y="310" text-anchor="middle" font-size="12" fill="#5d6d7e">저주파 드리프트 누설 차단</text>
+
+    <rect x="476" y="352" width="328" height="58" rx="6" fill="#ffffff" stroke="#7f8c8d"/>
+    <text x="640" y="376" text-anchor="middle" font-weight="700">0.2 ~ 0.5 Hz 대역통과</text>
+    <text x="640" y="396" text-anchor="middle" font-size="12" fill="#5d6d7e">RBJ biquad (IIR)</text>
+
+    <rect x="476" y="438" width="328" height="58" rx="6" fill="#ffffff" stroke="#7f8c8d"/>
+    <text x="640" y="462" text-anchor="middle" font-weight="700">Goertzel 뱅크 7개 빈</text>
+    <text x="640" y="482" text-anchor="middle" font-size="12" fill="#5d6d7e">0.20 ~ 0.50 Hz · 0.05 Hz 간격</text>
+
+    <rect x="476" y="524" width="328" height="66" rx="6" fill="#ffffff" stroke="#7f8c8d"/>
+    <text x="640" y="548" text-anchor="middle" font-weight="700">피크 주파수 + 집중도</text>
+    <text x="640" y="568" text-anchor="middle" font-size="12" fill="#5d6d7e">자기상관 경로로 독립 교차확인</text>
+    <text x="640" y="583" text-anchor="middle" font-size="11" fill="#5d6d7e">(lag 20~50 샘플)</text>
+  </g>
+  <g stroke="#37474f" stroke-width="1.6" marker-end="url(#ar)" fill="none">
+    <path d="M640 324 V344"/>
+    <path d="M640 410 V430"/>
+    <path d="M640 496 V516"/>
+  </g>
+  <text x="640" y="618" text-anchor="middle" font-size="12" fill="#1d6b3f" font-weight="700">FFT 대신 관심 대역만 계산</text>
+
+  <!-- panel 3 -->
+  <rect x="860" y="222" width="380" height="418" rx="10" fill="#fdecea" stroke="#90a4ae"/>
+  <text x="880" y="248" font-size="15" font-weight="700" fill="#922b21">3. 판정 · 알림</text>
+  <text x="978" y="248" font-size="12" fill="#5d6d7e">edge_state.h / edge_presence.h</text>
+
+  <g font-size="14" fill="#1c2833">
+    <rect x="886" y="266" width="328" height="58" rx="6" fill="#ffffff" stroke="#7f8c8d"/>
+    <text x="1050" y="290" text-anchor="middle" font-weight="700">주파수 일관성 확인</text>
+    <text x="1050" y="310" text-anchor="middle" font-size="12" fill="#5d6d7e">최근 3창 ±0.12 Hz 일치 시 확정</text>
+
+    <rect x="886" y="352" width="328" height="58" rx="6" fill="#ffffff" stroke="#7f8c8d"/>
+    <text x="1050" y="376" text-anchor="middle" font-weight="700">상태 판정 + 히스테리시스</text>
+    <text x="1050" y="396" text-anchor="middle" font-size="12" fill="#5d6d7e">연속 6회 = 60초 지속 시 발동</text>
+
+    <rect x="886" y="438" width="328" height="58" rx="6" fill="#ffffff" stroke="#7f8c8d"/>
+    <text x="1050" y="462" text-anchor="middle" font-weight="700">재실 확인</text>
+    <text x="1050" y="482" text-anchor="middle" font-size="12" fill="#5d6d7e">폰 결합 조회 + CSI 이탈 버스트</text>
+
+    <rect x="886" y="524" width="328" height="66" rx="6" fill="#ffffff" stroke="#c0392b" stroke-width="1.8"/>
+    <text x="1050" y="548" text-anchor="middle" font-weight="700">알림 출력</text>
+    <text x="1050" y="568" text-anchor="middle" font-size="12" fill="#922b21">EMERGENCY  LED + 부저</text>
+    <text x="1050" y="584" text-anchor="middle" font-size="12" fill="#922b21">FAULT  LED만</text>
+  </g>
+  <g stroke="#37474f" stroke-width="1.6" marker-end="url(#ar)" fill="none">
+    <path d="M1050 324 V344"/>
+    <path d="M1050 410 V430"/>
+    <path d="M1050 496 V516"/>
+  </g>
+  <text x="1050" y="618" text-anchor="middle" font-size="12" fill="#922b21" font-weight="700">응급 / 고장 2종 분리</text>
+
+  <!-- inter-panel arrows -->
+  <g stroke="#8d6e63" stroke-width="2.2" marker-end="url(#arw)" fill="none">
+    <path d="M420 430 H444"/>
+    <path d="M830 430 H854"/>
+  </g>
+
+  <!-- footer -->
+  <text x="40" y="678" font-size="13" fill="#546e7a">DRAM 24.6 % 사용 · 136 kB 여유 · 파이프라인 정적 구조체 약 7.3 kB</text>
+  <text x="1240" y="678" text-anchor="end" font-size="12" fill="#90a4ae">개발완료보고서 2.3절</text>
+</svg>
