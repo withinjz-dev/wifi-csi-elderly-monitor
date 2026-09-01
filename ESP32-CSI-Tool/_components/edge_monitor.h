@@ -28,7 +28,23 @@
 #include "edge_csi.h"
 #include "edge_baseline.h"
 #include "edge_state.h"
+#include "edge_presence.h"
 #include "alert_component.h"
+
+/* Set per-board at build time, e.g. via -DEDGE_ZONE_NAME='"bedroom"'.
+ * Defaults keep the existing single-board build behavior unchanged. */
+#ifndef EDGE_ZONE_NAME
+#define EDGE_ZONE_NAME "bedroom"
+#endif
+
+/* Off by default: no board has the AP+STA-to-internet route wired up yet
+ * (see edge_mqtt.h). Flip on with -DEDGE_ENABLE_MQTT=1 once that's verified. */
+#ifndef EDGE_ENABLE_MQTT
+#define EDGE_ENABLE_MQTT 0
+#endif
+#if EDGE_ENABLE_MQTT
+#include "edge_mqtt.h"
+#endif
 
 /* Frames to observe before locking in the subcarrier selection (~1 min). */
 #define EDGE_SELECTION_FRAMES   600
@@ -62,6 +78,10 @@ static void edge_decision_task(void *arg) {
     for (;;) {
         vTaskDelay(pdMS_TO_TICKS(EDGE_DECISION_MS));
         cycle++;
+
+        /* No-op on boards that aren't running AP mode, or without a
+         * configured EDGE_PHONE_MAC -- see edge_presence.h. */
+        edge_presence_poll_ap_stations();
 
         /* Lock in the subcarrier choice once enough frames have been scored. */
         if (!edge_pipe.selection_done && edge_pipe.sc_frames >= EDGE_SELECTION_FRAMES) {
@@ -130,6 +150,7 @@ static void edge_decision_task(void *arg) {
                         peak_freq,
                         edge_motion_threshold(&edge_baseline),
                         edge_breath_threshold(&edge_baseline),
+                        edge_departure_threshold(&edge_baseline),
                         have_data,
                         edge_local_hour(),
                         &d);
@@ -139,9 +160,15 @@ static void edge_decision_task(void *arg) {
             edge_baseline_update(&edge_baseline, motion_feature, breath_score);
         }
 
+        /* Phone-MAC presence (edge_presence.h) is the primary HOME/AWAY
+         * signal; d.away_inferred (a CSI motion-burst heuristic) is a
+         * secondary, independent one. Either suppresses emergency escalation
+         * -- they fail differently, so requiring both would defeat the point. */
+        bool away = !edge_presence_is_home() || d.away_inferred;
+
         /* Emergency outranks fault: if the room is visible and respiration is
          * absent, that is what the buzzer should be saying. */
-        alert_level_t want = d.should_alert ? ALERT_EMERGENCY
+        alert_level_t want = (d.should_alert && !away) ? ALERT_EMERGENCY
                            : d.should_fault ? ALERT_FAULT
                            : ALERT_NONE;
         if (want != alert_get_level()) {
@@ -154,9 +181,22 @@ static void edge_decision_task(void *arg) {
                 ESP_LOGW(EDGE_MON_TAG,
                          "SENSOR FAULT: %u windows with no CSI (check TX board power/link)",
                          (unsigned) d.data_streak);
+            } else if (away) {
+                ESP_LOGI(EDGE_MON_TAG,
+                         "no response, but assumed AWAY (%s%s%s) -- escalation suppressed (streak=%u)",
+                         !edge_presence_is_home() ? "phone off home network" : "",
+                         (!edge_presence_is_home() && d.away_inferred) ? " + " : "",
+                         d.away_inferred ? "CSI departure burst" : "",
+                         (unsigned) d.streak);
             } else {
                 ESP_LOGI(EDGE_MON_TAG, "alert cleared");
             }
+#if EDGE_ENABLE_MQTT
+            edge_mqtt_publish_state(EDGE_ZONE_NAME, edge_state_name(d.state),
+                                    want == ALERT_EMERGENCY ? "EMERGENCY"
+                                      : want == ALERT_FAULT ? "FAULT"
+                                      : away ? "AWAY" : "NONE");
+#endif
         }
 
         if (cycle % EDGE_NVS_SAVE_EVERY == 0 && edge_baseline_ready(&edge_baseline)) {
@@ -164,7 +204,7 @@ static void edge_decision_task(void *arg) {
         }
 
         /* Developer-facing only; the device does not need a listener. */
-        printf("EDGE,%s,%.3f,%.3f,%.3f,%.3f,%.3f,%u,%u,%u,%u,%.3f,%.3f,%d,%s\n",
+        printf("EDGE,%s,%.3f,%.3f,%.3f,%.3f,%.3f,%u,%u,%u,%u,%.3f,%.3f,%d,%s,%d\n",
                edge_state_name(d.state),
                motion_feature,
                breath_score,
@@ -179,15 +219,19 @@ static void edge_decision_task(void *arg) {
                edge_breath_threshold(&edge_baseline),
                edge_baseline_ready(&edge_baseline) ? 1 : 0,
                want == ALERT_EMERGENCY ? "EMERGENCY"
-                 : want == ALERT_FAULT ? "FAULT" : "-");
+                 : want == ALERT_FAULT ? "FAULT" : "-",
+               d.away_inferred ? 1 : 0);
 
         /* Acquisition-layer diagnostics, separate from the decision line. */
-        printf("EDGE_DIAG,cb=%u,nullbuf=%u,lastlen=%u,rejected=%u,ringfill=%d\n",
+        printf("EDGE_DIAG,cb=%u,nullbuf=%u,lastlen=%u,rejected=%u,ringfill=%d,"
+               "presence=%s/%s\n",
                (unsigned) edge_csi_cb_count,
                (unsigned) edge_csi_null_buf,
                (unsigned) edge_csi_last_len,
                (unsigned) edge_pipe.rejected_frames,
-               edge_pipe.ring.filled);
+               edge_pipe.ring.filled,
+               edge_presence_mode(),
+               edge_presence_is_home() ? "HOME" : "AWAY");
         fflush(stdout);
     }
 }
@@ -196,15 +240,20 @@ static inline void edge_monitor_start(void) {
     edge_goertzel_init(&edge_goertzel, EDGE_FS_HZ);
     edge_state_init(&edge_state);
     edge_baseline_load(&edge_baseline);
+    edge_presence_init();
 
     edge_csi_start();
+
+#if EDGE_ENABLE_MQTT
+    edge_mqtt_init();
+#endif
 
     /* Priority 3: below the CSI ingest task so queue draining is never starved
      * by a decision cycle's arithmetic. */
     xTaskCreate(&edge_decision_task, "edge_decision", 8192, NULL, 3, NULL);
 
     printf("EDGE_HEADER,state,motion,breath_score,peak_hz,ac_hz,ac_strength,"
-           "streak,data_streak,frames,dropped,motion_thr,breath_thr,calibrated,alert\n");
+           "streak,data_streak,frames,dropped,motion_thr,breath_thr,calibrated,alert,away_inferred\n");
     ESP_LOGI(EDGE_MON_TAG, "standalone edge monitor running");
 }
 

@@ -1,0 +1,10 @@
+# See active_ap/sdkconfig.defaults for why this file exists.
+# CSI is off by default in a fresh sdkconfig and the firmware boot-loops
+# without it.
+CONFIG_ESP32_WIFI_CSI_ENABLED=y
+
+# Must match the channel of the link being observed.
+CONFIG_WIFI_CHANNEL=6
+CONFIG_SHOULD_COLLECT_CSI=y
+CONFIG_SHOULD_COLLECT_ONLY_LLTF=y
+CONFIG_SEND_CSI_TO_SERIAL=y

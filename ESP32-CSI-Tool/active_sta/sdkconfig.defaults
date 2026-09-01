@@ -1,0 +1,6 @@
+# See active_ap/sdkconfig.defaults for why this file exists.
+CONFIG_WIFI_CHANNEL=6
+CONFIG_PACKET_RATE=100
+
+# Must match active_ap.
+CONFIG_ESP_WIFI_SSID="5129"

@@ -1,0 +1,17 @@
+# Build settings required for this project. sdkconfig itself is gitignored
+# (it is machine-local and regenerated), so the settings that must not be lost
+# live here -- ESP-IDF applies sdkconfig.defaults when generating sdkconfig.
+#
+# CONFIG_ESP32_WIFI_CSI_ENABLED is the critical one: with it unset the build
+# succeeds and the firmware boots, but esp_wifi_set_csi(1) returns ESP_FAIL at
+# runtime and the device aborts in a boot loop. A freshly generated sdkconfig
+# defaults it to OFF, so omitting this file reproduces that failure exactly.
+CONFIG_ESP32_WIFI_CSI_ENABLED=y
+
+CONFIG_WIFI_CHANNEL=6
+CONFIG_SHOULD_COLLECT_CSI=y
+CONFIG_SHOULD_COLLECT_ONLY_LLTF=y
+CONFIG_SEND_CSI_TO_SERIAL=y
+
+# Closed TX-RX network. Change both for your own deployment.
+CONFIG_ESP_WIFI_SSID="5129"

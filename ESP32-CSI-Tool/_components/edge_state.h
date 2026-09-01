@@ -46,6 +46,26 @@
 #define EDGE_SLEEP_HOUR_START    22
 #define EDGE_SLEEP_HOUR_END      7
 
+/*
+ * Departure inference -- the SECONDARY away signal. edge_presence.h (phone
+ * associated with the home network) is the primary one and is far more
+ * reliable; this exists because the two fail differently, and because it
+ * still works if the phone MAC is unset or the phone is left at home.
+ *
+ * A window that clears the (much higher) departure threshold -- see
+ * edge_baseline.h's EDGE_K_DEPARTURE -- is read as "walked past the sensor",
+ * and emergency escalation is suppressed until either presence resumes (they
+ * came back) or this many cycles pass with nothing seen at all, at which
+ * point the assumption is dropped and normal NO_RESPONSE escalation resumes
+ * -- so a mistaken "they left" guess cannot suppress a real emergency
+ * forever. 4320 cycles x 10 s = 12 hours.
+ *
+ * Honest limitation: a quiet or distant exit never crosses the threshold, so
+ * this alone would miss many real departures. That is precisely why it is
+ * secondary rather than load-bearing.
+ */
+#define EDGE_AWAY_TIMEOUT_CYCLES 4320
+
 typedef enum {
     EDGE_STATE_NO_DATA = 0,
     EDGE_STATE_ACTIVE,
@@ -81,6 +101,8 @@ typedef struct {
     uint32_t no_data_streak;
     bool     alert_active;
     edge_state_t last_state;
+    bool     away_inferred;
+    uint32_t away_cycles;
 } edge_state_ctx_t;
 
 static inline void edge_state_init(edge_state_ctx_t *c) {
@@ -119,6 +141,7 @@ typedef struct {
     float motion_feature;
     uint32_t streak;
     uint32_t data_streak;
+    bool     away_inferred;    /* departure burst seen; escalation suppressed */
 } edge_decision_t;
 
 /*
@@ -136,6 +159,7 @@ static inline void edge_state_step(edge_state_ctx_t *c,
                                    float peak_freq,
                                    float motion_threshold,
                                    float breath_threshold,
+                                   float departure_threshold,
                                    bool have_data,
                                    int hour,
                                    edge_decision_t *out) {
@@ -149,12 +173,28 @@ static inline void edge_state_step(edge_state_ctx_t *c,
         c->no_data_streak++;
         /* Deliberately does NOT touch no_response_streak: a blind sensor is
          * not evidence about the person either way. */
+    } else if (motion_feature > departure_threshold) {
+        /* A burst this large is read as "walked past the sensor", not
+         * ordinary in-room motion -- see EDGE_K_DEPARTURE. Starts (or
+         * restarts) the away-inferred window. */
+        c->no_data_streak = 0;
+        out->state = EDGE_STATE_ACTIVE;
+        c->no_response_streak = 0;
+        c->freq_count = 0;
+        c->freq_head  = 0;
+        c->away_inferred = true;
+        c->away_cycles   = 0;
     } else if (motion_feature > motion_threshold) {
         c->no_data_streak = 0;
         out->state = EDGE_STATE_ACTIVE;
         c->no_response_streak = 0;
         c->freq_count = 0;          /* motion invalidates the breathing history */
         c->freq_head  = 0;
+        /* Ordinary in-room motion is presence, not a departure -- clears any
+         * standing away assumption immediately (they're evidently still/back
+         * home moving around). */
+        c->away_inferred = false;
+        c->away_cycles   = 0;
     } else if (breath_score > breath_threshold) {
         c->no_data_streak = 0;
         bool consistent = edge_freq_consistent(c, peak_freq);
@@ -164,6 +204,10 @@ static inline void edge_state_step(edge_state_ctx_t *c,
             out->breathing_confirmed = true;
             c->no_response_streak = 0;
             out->baseline_updatable = true;   /* still + breathing == good sample */
+            /* Breathing is direct evidence of presence -- clears the away
+             * assumption even though there was no motion burst back. */
+            c->away_inferred = false;
+            c->away_cycles   = 0;
         } else {
             out->state = EDGE_STATE_NO_RESPONSE;
             c->no_response_streak++;
@@ -174,15 +218,31 @@ static inline void edge_state_step(edge_state_ctx_t *c,
         c->no_response_streak++;
     }
 
-    out->streak      = c->no_response_streak;
-    out->data_streak = c->no_data_streak;
+    /* While away is assumed, nothing above re-confirmed presence: count this
+     * cycle against the timeout. Once it lapses, drop the assumption so
+     * ordinary NO_RESPONSE escalation can resume -- the streak kept counting
+     * underneath the whole time, so escalation is immediate at that point,
+     * not delayed another 60 s. */
+    if (c->away_inferred && out->state != EDGE_STATE_ACTIVE
+                          && out->state != EDGE_STATE_SLEEP_NORMAL) {
+        c->away_cycles++;
+        if (c->away_cycles >= EDGE_AWAY_TIMEOUT_CYCLES) {
+            c->away_inferred = false;
+            c->away_cycles   = 0;
+        }
+    }
+
+    out->streak        = c->no_response_streak;
+    out->data_streak    = c->no_data_streak;
+    out->away_inferred = c->away_inferred;
 
     /* Emergency is gated on sleep hours -- a person out of the room during the
      * day is not an emergency. A blind sensor is not gated: whenever the device
      * stops seeing, somebody should know. */
     bool sleep_hours = (hour < 0) ? true : edge_in_sleep_hours(hour);
     out->should_alert = (c->no_response_streak >= EDGE_NO_RESPONSE_STREAK)
-                        && sleep_hours;
+                        && sleep_hours
+                        && !c->away_inferred;
     out->should_fault = (c->no_data_streak >= EDGE_NO_RESPONSE_STREAK);
 
     /* Never learn from a window that is driving, or about to drive, an alert. */

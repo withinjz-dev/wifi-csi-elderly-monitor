@@ -41,6 +41,17 @@
 #define EDGE_K_MOTION        3.0f
 #define EDGE_K_BREATH        1.8f   /* on the flat-noise-normalized score */
 
+/*
+ * Departure-burst multiplier, well above EDGE_K_MOTION. Ordinary in-room
+ * motion (rolling over, sitting up) crosses the k=3 line; walking out past
+ * the RX -- closest approach to the antenna, largest multipath change this
+ * sensor ever sees -- should be well beyond that. Not validated against a
+ * recorded "walked out" dataset; chosen as a conservative multiple of the
+ * motion threshold pending that data. See edge_state.h for how this is used
+ * and its honest failure mode (a quiet or distant exit won't cross it).
+ */
+#define EDGE_K_DEPARTURE     6.0f
+
 /* EWMA rate for slow drift (furniture moved, seasonal RF change).
  * 0.002 at one update per 10 s is a time constant of roughly 80 minutes. */
 #define EDGE_EWMA_ALPHA      0.002f
@@ -78,6 +89,10 @@ static inline bool edge_baseline_ready(const edge_baseline_t *b) {
 
 static inline float edge_motion_threshold(const edge_baseline_t *b) {
     return b->motion_mu + EDGE_K_MOTION * b->motion_sigma;
+}
+
+static inline float edge_departure_threshold(const edge_baseline_t *b) {
+    return b->motion_mu + EDGE_K_DEPARTURE * b->motion_sigma;
 }
 
 static inline float edge_breath_threshold(const edge_baseline_t *b) {
