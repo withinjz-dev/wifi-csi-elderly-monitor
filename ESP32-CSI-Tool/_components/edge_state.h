@@ -41,10 +41,32 @@
 
 #define EDGE_FREQ_HISTORY        3
 #define EDGE_FREQ_TOLERANCE_HZ   0.12f
-#define EDGE_NO_RESPONSE_STREAK  6      /* x 10 s = 60 s sustained */
+/*
+ * Demo build: idf.py -DEDGE_DEMO=1 flash
+ *
+ * Two things make the real thresholds impossible to film. Emergency is gated
+ * to sleep hours, so a daytime recording never triggers one; and the 60 s
+ * hold is a long time to sit still on camera. This switch relaxes both.
+ *
+ * It exists as a build flag rather than as edits to the constants below
+ * because the obvious alternative -- change the numbers, film, change them
+ * back -- ships demo-tuned firmware the one time someone forgets. Here the
+ * default build is always the real one, and a demo build announces itself in
+ * the boot log.
+ */
+#ifndef EDGE_DEMO
+#define EDGE_DEMO 0
+#endif
 
-#define EDGE_SLEEP_HOUR_START    22
-#define EDGE_SLEEP_HOUR_END      7
+#if EDGE_DEMO
+  #define EDGE_NO_RESPONSE_STREAK  2      /* x 10 s = 20 s */
+  #define EDGE_SLEEP_HOUR_START    0       /* 시간대 게이트 해제 */
+  #define EDGE_SLEEP_HOUR_END      24
+#else
+  #define EDGE_NO_RESPONSE_STREAK  6      /* x 10 s = 60 s sustained */
+  #define EDGE_SLEEP_HOUR_START    22
+  #define EDGE_SLEEP_HOUR_END      7
+#endif
 
 /*
  * Departure inference -- the SECONDARY away signal. edge_presence.h (phone

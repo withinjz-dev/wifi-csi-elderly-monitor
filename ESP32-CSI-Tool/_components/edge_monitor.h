@@ -254,6 +254,11 @@ static inline void edge_monitor_start(void) {
 
     printf("EDGE_HEADER,state,motion,breath_score,peak_hz,ac_hz,ac_strength,"
            "streak,data_streak,frames,dropped,motion_thr,breath_thr,calibrated,alert,away_inferred\n");
+#if EDGE_DEMO
+    ESP_LOGW(EDGE_MON_TAG,
+             "*** DEMO BUILD *** 무응답 %d초 · 시간대 게이트 해제 — 실사용 금지",
+             EDGE_NO_RESPONSE_STREAK * (EDGE_DECISION_MS / 1000));
+#endif
     ESP_LOGI(EDGE_MON_TAG, "standalone edge monitor running");
 }
 
