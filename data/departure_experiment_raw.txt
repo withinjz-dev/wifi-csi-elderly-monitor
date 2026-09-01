@@ -1,0 +1,260 @@
+0000.6 l=0,presence=registered/HOME
+0000.6 l=0,presence=registered/HOME
+0000.6 l=0,presence=registered/HOME
+0000.6 l=0,presence=registered/HOME
+0000.6 l=0,presence=registered/HOME
+0000.6 l=0,presence=registered/HOME
+0000.6 l=0,presence=registered/HOME
+0000.6 l=0,presence=registered/HOME
+0000.6 l=0,presence=registered/HOME
+0000.6 l=0,presence=registered/HOME
+0000.6 l=0,presence=registered/HOME
+0000.6 l=0,presence=registered/HOME
+0000.6 l=0,presence=registered/HOME
+0000.6 l=0,presence=registered/HOME
+0000.6 l=0,presence=registered/HOME
+0000.6 l=0,presence=registered/HOME
+0000.6 l=0,presence=registered/HOME
+0000.6 l=0,presence=registered/HOME
+0000.6 l=0,presence=registered/HOME
+0000.6 l=0,presence=registered/HOME
+0000.6 l=0,presence=registered/HOME
+0000.6 l=0,presence=registered/HOME
+0000.6 l=0,presence=registered/HOME
+0000.6 l=0,presence=registered/HOME
+0000.6 l=0,presence=registered/HOME
+0000.6 l=0,presence=registered/HOME
+0000.6 l=0,presence=registered/HOME
+0000.6 l=0,presence=registered/HOME
+0000.6 l=0,presence=registered/HOME
+0000.6 l=0,presence=registered/HOME
+0000.6 l=0,presence=registered/HOME
+0000.6 l=0,presence=registered/HOME
+0000.6 l=0,presence=registered/HOME
+0000.6 l=0,presence=registered/HOME
+0000.6 l=0,presence=registered/HOME
+0000.6 l=0,presence=registered/HOME
+0000.6 l=0,presence=registered/HOME
+0000.6 l=0,presence=registered/HOME
+0000.6 l=0,presence=registered/HOME
+0000.6 l=0,presence=registered/HOME
+0000.6 l=0,presence=registered/HOME
+0000.6 l=0,presence=registered/HOME
+0000.6 l=0,presence=registered/HOME
+0000.6 l=0,presence=registered/HOME
+0000.6 l=0,presence=registered/HOME
+0000.6 l=0,presence=registered/HOME
+0000.6 l=0,presence=registered/HOME
+0000.6 l=0,presence=registered/HOME
+0000.6 l=0,presence=registered/HOME
+0000.6 ets Jul 29 2019 12:21:46
+0000.6 rst:0x1 (POWERON_RESET),boot:0x12 (SPI_FAST_FLASH_BOOT)
+0000.6 configsip: 0, SPIWP:0xee
+0000.6 clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+0000.6 mode:DIO, clock div:2
+0000.6 load:0x3fff0030,len:7164
+0000.6 ho 0 tail 12 room 4
+0000.6 load:0x40078000,len:14292
+0000.6 load:0x40080400,len:3688
+0000.6 entry 0x40080678
+0000.6 I (29) boot: ESP-IDF v4.3 2nd stage bootloader
+0000.6 I (29) boot: compile time 19:58:33
+0000.6 I (29) boot: chip revision: 3
+0000.6 I (32) boot_comm: chip revision: 3, min. bootloader chip revision: 0
+0000.6 I (39) boot.esp32: SPI Speed      : 40MHz
+0000.6 I (43) boot.esp32: SPI Mode       : DIO
+0000.6 I (48) boot.esp32: SPI Flash Size : 2MB
+0000.6 I (53) boot: Enabling RNG early entropy source...
+0000.6 I (58) boot: Partition Table:
+0000.6 I (62) boot: ## Label            Usage          Type ST Offset   Length
+0000.6 I (69) boot:  0 nvs              WiFi data        01 02 00009000 00006000
+0000.6 I (76) boot:  1 phy_init         RF data          01 01 0000f000 00001000
+0000.6 I (84) boot:  2 factory          factory app      00 00 00010000 00100000
+0000.6 I (91) boot: End of partition table
+0000.6 I (95) boot_comm: chip revision: 3, min. application chip revision: 0
+0000.6 I (103) esp_image: segment 0: paddr=00010020 vaddr=3f400020 size=2ab44h (174916) map
+0000.6 I (177) esp_image: segment 1: paddr=0003ab6c vaddr=3ffb0000 size=044c4h ( 17604) load
+0000.6 I (184) esp_image: segment 2: paddr=0003f038 vaddr=40080000 size=00fe0h (  4064) load
+0000.6 I (186) esp_image: segment 3: paddr=00040020 vaddr=400d0020 size=a0eech (659180) map
+0000.6 I (440) esp_image: segment 4: paddr=000e0f14 vaddr=40080fe0 size=1493ch ( 84284) load
+0000.6 I (476) esp_image: segment 5: paddr=000f5858 vaddr=50000000 size=00010h (    16) load
+0000.6 I (488) boot: Loaded app from partition at offset 0x10000
+0000.6 I (488) boot: Disabling RNG early entropy source...
+0000.6 I (500) cpu_start: Pro cpu up.
+0000.6 I (500) cpu_start: Starting app cpu, entry point is 0x40081328
+0000.6 I (0) cpu_start: App cpu up.
+0000.6 I (516) cpu_start: Pro cpu start user code
+0000.6 I (517) cpu_start: cpu freq: 160000000
+0000.6 I (517) cpu_start: Application information:
+0000.6 I (521) cpu_start: Project name:     active-ap
+0000.6 I (526) cpu_start: App version:      947fb59
+0000.6 I (531) cpu_start: Compile time:     Sep  2 2026 00:13:17
+0000.6 I (537) cpu_start: ELF file SHA256:  d394a2f36bce3a23...
+0001.6 I (543) cpu_start: ESP-IDF:          v4.3
+0001.6 I (548) heap_init: Initializing. RAM available for dynamic allocation:
+0001.6 I (555) heap_init: At 3FFAE6E0 len 00001920 (6 KiB): DRAM
+0001.6 I (561) heap_init: At 3FFBAEA8 len 00025158 (148 KiB): DRAM
+0001.6 I (567) heap_init: At 3FFE0440 len 00003AE0 (14 KiB): D/IRAM
+0001.6 I (574) heap_init: At 3FFE4350 len 0001BCB0 (111 KiB): D/IRAM
+0001.6 I (580) heap_init: At 4009591C len 0000A6E4 (41 KiB): IRAM
+0001.6 I (587) spi_flash: detected chip: generic
+0001.6 I (591) spi_flash: flash io: dio
+0001.6 W (595) spi_flash: Detected size(4096k) larger than the size in the binary image header(2048k). Using the size in the binary image header.
+0001.6 I (612) cpu_start: Starting scheduler on PRO CPU.
+0001.6 I (0) cpu_start: Starting scheduler on APP CPU.
+0001.6 -----------------------
+0001.6 ESP32 CSI Tool Settings
+0001.6 -----------------------
+0001.6 PROJECT_NAME: ACTIVE_AP
+0001.6 CONFIG_ESPTOOLPY_MONITOR_BAUD: 115200
+0001.6 CONFIG_ESP_CONSOLE_UART_BAUDRATE: 115200
+0001.6 IDF_VER: v4.3
+0001.6 -----------------------
+0001.6 WIFI_CHANNEL: 6
+0001.6 ESP_WIFI_SSID: 5129
+0001.6 ESP_WIFI_PASSWORD: mypassword
+0001.6 SHOULD_COLLECT_CSI: 1
+0001.6 SHOULD_COLLECT_ONLY_LLTF: 1
+0001.6 SEND_CSI_TO_SERIAL: 1
+0001.6 SEND_CSI_TO_SD: 0
+0001.6 -----------------------
+0001.6 I (756) gpio: GPIO[4]| InputEn: 0| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0
+0001.6 I (766) wifi:wifi driver task: 3ffc49bc, prio:23, stack:6656, core=0
+0001.6 I (766) system_api: Base MAC address is not set
+0001.6 I (766) system_api: read default base MAC address from EFUSE
+0001.6 I (776) wifi:wifi firmware version: c7d0450
+0001.6 I (776) wifi:wifi certification version: v7.0
+0001.6 I (776) wifi:config NVS flash: enabled
+0001.6 I (786) wifi:config nano formating: disabled
+0001.6 I (786) wifi:Init data frame dynamic rx buffer num: 32
+0001.6 I (786) wifi:Init management frame dynamic rx buffer num: 32
+0001.6 I (796) wifi:Init management short buffer num: 32
+0001.6 I (796) wifi:Init dynamic tx buffer num: 32
+0001.6 I (806) wifi:Init static rx buffer size: 2212
+0001.6 I (806) wifi:Init static rx buffer num: 10
+0001.6 I (816) wifi:Init dynamic rx buffer num: 32
+0001.6 I (816) wifi_init: rx ba win: 6
+0001.6 I (816) wifi_init: tcpip mbox: 32
+0001.6 I (826) wifi_init: udp mbox: 6
+0001.6 I (826) wifi_init: tcp mbox: 6
+0001.6 I (836) wifi_init: tcp tx win: 5744
+0001.6 I (836) wifi_init: tcp rx win: 5744
+0001.6 I (836) wifi_init: tcp mss: 1440
+0001.6 I (846) wifi_init: WiFi IRAM OP enabled
+0001.6 I (846) wifi_init: WiFi RX IRAM OP enabled
+0001.6 I (856) phy_init: phy_version 4670,719f9f6,Feb 18 2021,17:07:07
+0001.6 I (966) wifi:mode : softAP (f4:2d:c9:59:a1:9d)
+0001.6 I (966) wifi:Total power save buffer number: 16
+0001.6 I (966) wifi:Init max length of beacon: 752/752
+0001.6 I (966) wifi:Init max length of beacon: 752/752
+0001.6 I (966) wifi:Set ps type: 0
+0001.6 I (976) Active CSI collection (AP): softap_init finished. SSID:5129 password:mypassword
+0001.6 I (976) gpio: GPIO[0]| InputEn: 1| OutputEn: 0| OpenDrain: 0| Pullup: 1| Pulldown: 0| Intr:0
+0001.6 I (986) edge_presence: restored from NVS: 3 device(s), registered device is FC:E8:C0:CB:9E:E4
+0001.6 I (996) edge_csi: edge CSI pipeline started (queue=16, window=256 @ 10 Hz)
+0001.6 EDGE_HEADER,state,motion,breath_score,peak_hz,ac_hz,ac_strength,streak,data_streak,frames,dropped,motion_thr,breath_thr,calibrated,alert,away_inferred
+0001.6 W (1016) edge_monitor: *** DEMO BUILD *** 무응답 20초 · 시간대 게이트 해제 — 실사용 금지
+0001.6 I (1026) edge_monitor: standalone edge monitor running
+0011.6 EDGE,NO_DATA,0.000,0.000,0.000,0.000,0.000,0,1,0,0,1.560,1.540,0,-,0
+0011.6 EDGE_DIAG,cb=0,nullbuf=0,lastlen=0,rejected=0,ringfill=0,presence=registered/HOME
+0021.6 W (21006) edge_monitor: SENSOR FAULT: 2 windows with no CSI (check TX board power/link)
+0021.6 EDGE,NO_DATA,0.000,0.000,0.000,0.000,0.000,0,2,0,0,1.560,1.540,0,FAULT,0
+0021.6 EDGE_DIAG,cb=0,nullbuf=0,lastlen=0,rejected=0,ringfill=0,presence=registered/HOME
+0022.6 I (22016) wifi:new:<6,1>, old:<6,1>, ap:<6,1>, sta:<255,255>, prof:6
+0022.6 I (22016) wifi:station: fc:e8:c0:cb:9e:e4 join, AID=1, bgn, 40U
+0022.6 I (22026) edge_csi: first CSI frame: len=128 rssi=-75 (need >= 128)
+0022.6 I (22036) Active CSI collection (AP): station fc:e8:c0:cb:9e:e4 join, AID=1
+0022.6 I (22076) esp_netif_lwip: DHCP server assigned IP to a station, IP is: 192.168.4.2
+0023.6 W (23026) wifi:<ba-add>idx:4 (ifx:1, fc:e8:c0:cb:9e:e4), tid:0, ssn:0, winSize:64
+0031.7 EDGE,NO_DATA,2.824,0.000,0.000,0.000,0.000,0,3,103,0,1.560,1.540,0,FAULT,0
+0031.7 EDGE_DIAG,cb=103,nullbuf=0,lastlen=384,rejected=0,ringfill=89,presence=registered/HOME
+0041.7 EDGE,NO_DATA,3.877,0.000,0.000,0.000,0.000,0,4,111,0,1.560,1.540,0,FAULT,0
+0041.7 EDGE_DIAG,cb=214,nullbuf=0,lastlen=384,rejected=0,ringfill=188,presence=registered/HOME
+0051.7 I (51016) edge_monitor: alert cleared
+0051.7 EDGE,ACTIVE,1.962,2.949,0.450,0.222,0.097,0,0,112,0,1.560,1.540,0,-,0
+0051.7 EDGE_DIAG,cb=326,nullbuf=0,lastlen=384,rejected=0,ringfill=256,presence=registered/HOME
+0061.8 EDGE,ACTIVE,1.903,3.149,0.300,0.435,-0.014,0,0,111,0,1.560,1.540,0,-,0
+0061.8 EDGE_DIAG,cb=437,nullbuf=0,lastlen=384,rejected=0,ringfill=256,presence=registered/HOME
+0071.8 EDGE,ACTIVE,2.461,2.010,0.300,0.345,0.186,0,0,111,0,1.560,1.540,0,-,1
+0071.8 EDGE_DIAG,cb=548,nullbuf=0,lastlen=384,rejected=0,ringfill=256,presence=registered/HOME
+0081.9 I (81016) edge_csi: selected 8 subcarriers after 659 frames:
+0081.9 I (81016) edge_csi:    sc[ 2] band/raw variance ratio 0.1588
+0081.9 I (81016) edge_csi:    sc[ 0] band/raw variance ratio 0.1517
+0081.9 I (81016) edge_csi:    sc[ 4] band/raw variance ratio 0.1495
+0081.9 I (81026) edge_csi:    sc[ 8] band/raw variance ratio 0.1480
+0081.9 I (81036) edge_csi:    sc[ 5] band/raw variance ratio 0.1477
+0081.9 I (81036) edge_csi:    sc[ 7] band/raw variance ratio 0.1473
+0081.9 I (81046) edge_csi:    sc[ 1] band/raw variance ratio 0.1464
+0081.9 I (81056) edge_csi:    sc[ 6] band/raw variance ratio 0.1462
+0081.9 EDGE,NO_RESPONSE,0.952,1.949,0.350,0.323,0.222,1,0,111,0,1.560,1.540,0,-,1
+0081.9 EDGE_DIAG,cb=660,nullbuf=0,lastlen=128,rejected=0,ringfill=256,presence=registered/HOME
+0091.9 EDGE,SLEEP_NORMAL,0.854,1.877,0.300,0.385,0.064,0,0,113,0,1.004,1.967,0,-,0
+0091.9 EDGE_DIAG,cb=772,nullbuf=0,lastlen=384,rejected=0,ringfill=256,presence=registered/HOME
+0101.9 EDGE,ACTIVE,5.085,1.986,0.500,0.500,0.079,0,0,111,0,1.004,1.967,0,-,1
+0101.9 EDGE_DIAG,cb=883,nullbuf=0,lastlen=384,rejected=0,ringfill=256,presence=registered/HOME
+0112.0 EDGE,ACTIVE,2.210,2.312,0.500,0.238,0.159,0,0,111,0,1.004,1.967,0,-,1
+0112.0 EDGE_DIAG,cb=994,nullbuf=0,lastlen=384,rejected=0,ringfill=256,presence=registered/HOME
+0122.0 EDGE,ACTIVE,2.434,2.155,0.450,0.233,0.169,0,0,111,0,1.004,1.967,0,-,1
+0122.0 EDGE_DIAG,cb=1105,nullbuf=0,lastlen=384,rejected=0,ringfill=256,presence=registered/HOME
+0131.0 EDGE,ACTIVE,1.749,2.177,0.300,0.244,0.310,0,0,111,0,1.004,1.967,0,-,1
+0131.0 EDGE_DIAG,cb=1216,nullbuf=0,lastlen=384,rejected=0,ringfill=256,presence=registered/HOME
+0141.1 EDGE,NO_RESPONSE,0.906,2.860,0.200,0.270,0.230,1,0,111,0,1.004,1.967,0,-,1
+0141.1 EDGE_DIAG,cb=1327,nullbuf=0,lastlen=384,rejected=0,ringfill=256,presence=registered/HOME
+0151.1 EDGE,SLEEP_NORMAL,0.553,2.576,0.250,0.263,0.303,0,0,112,0,1.166,2.859,0,-,0
+0151.1 EDGE_DIAG,cb=1439,nullbuf=0,lastlen=384,rejected=0,ringfill=256,presence=registered/HOME
+0161.2 EDGE,ACTIVE,1.280,2.398,0.250,0.256,0.220,0,0,112,0,1.166,2.859,0,-,0
+0161.2 EDGE_DIAG,cb=1551,nullbuf=0,lastlen=384,rejected=0,ringfill=256,presence=registered/HOME
+0171.2 EDGE,NO_RESPONSE,0.893,4.195,0.250,0.256,0.268,1,0,111,0,1.166,2.859,0,-,0
+0171.2 EDGE_DIAG,cb=1662,nullbuf=0,lastlen=384,rejected=0,ringfill=256,presence=registered/HOME
+0181.2 EDGE,SLEEP_NORMAL,0.994,3.496,0.300,0.278,0.336,0,0,111,0,1.359,3.844,0,-,0
+0181.2 EDGE_DIAG,cb=1773,nullbuf=0,lastlen=384,rejected=0,ringfill=256,presence=registered/HOME
+0191.3 EDGE,NO_RESPONSE,1.041,3.056,0.300,0.238,0.182,1,0,111,0,1.359,3.844,0,-,0
+0191.3 EDGE_DIAG,cb=1884,nullbuf=0,lastlen=384,rejected=0,ringfill=256,presence=registered/HOME
+0201.3 W (201076) edge_monitor: *** EMERGENCY: 2 windows with no respiration ***
+0201.3 EDGE,NO_RESPONSE,1.124,2.037,0.500,0.270,0.185,2,0,111,0,1.359,3.844,0,EMERGENCY,0
+0201.3 EDGE_DIAG,cb=1995,nullbuf=0,lastlen=384,rejected=0,ringfill=256,presence=registered/HOME
+0211.4 EDGE,NO_RESPONSE,0.926,2.458,0.250,0.286,0.336,3,0,112,0,1.359,3.844,0,EMERGENCY,0
+0211.4 EDGE_DIAG,cb=2107,nullbuf=0,lastlen=384,rejected=0,ringfill=256,presence=registered/HOME
+0221.4 I (221086) edge_monitor: alert cleared
+0221.4 EDGE,ACTIVE,1.846,2.608,0.500,0.476,0.379,0,0,111,0,1.359,3.844,0,-,0
+0221.4 EDGE_DIAG,cb=2218,nullbuf=0,lastlen=384,rejected=0,ringfill=256,presence=registered/HOME
+0231.5 EDGE,ACTIVE,3.056,2.225,0.450,0.435,0.231,0,0,112,0,1.359,3.844,0,-,1
+0231.5 EDGE_DIAG,cb=2330,nullbuf=0,lastlen=384,rejected=0,ringfill=256,presence=registered/HOME
+0241.5 EDGE,ACTIVE,2.557,2.123,0.200,0.204,0.314,0,0,112,0,1.359,3.844,0,-,1
+0241.5 EDGE_DIAG,cb=2442,nullbuf=0,lastlen=384,rejected=0,ringfill=256,presence=registered/HOME
+0251.5 EDGE,ACTIVE,1.790,2.509,0.400,0.204,0.364,0,0,111,0,1.359,3.844,0,-,0
+0251.5 EDGE_DIAG,cb=2553,nullbuf=0,lastlen=384,rejected=0,ringfill=256,presence=registered/HOME
+0261.6 EDGE,NO_RESPONSE,0.908,1.504,0.250,0.200,0.239,1,0,111,0,1.359,3.844,0,-,0
+0261.6 EDGE_DIAG,cb=2664,nullbuf=0,lastlen=384,rejected=0,ringfill=256,presence=registered/HOME
+0271.8 W (271086) edge_monitor: *** EMERGENCY: 2 windows with no respiration ***
+0271.8 EDGE,NO_RESPONSE,0.982,2.778,0.400,0.208,0.287,2,0,112,0,1.359,3.844,0,EMERGENCY,0
+0271.8 EDGE_DIAG,cb=2776,nullbuf=0,lastlen=384,rejected=0,ringfill=256,presence=registered/HOME
+0281.8 I (281096) edge_monitor: no response, but assumed AWAY (CSI departure burst) -- escalation suppressed (streak=0)
+0281.8 EDGE,ACTIVE,3.969,2.781,0.400,0.204,0.130,0,0,111,0,1.359,3.844,0,-,1
+0281.8 EDGE_DIAG,cb=2887,nullbuf=0,lastlen=384,rejected=0,ringfill=256,presence=registered/HOME
+0291.8 EDGE,NO_RESPONSE,0.906,3.709,0.400,0.200,0.346,1,0,111,0,1.359,3.844,0,-,1
+0291.8 EDGE_DIAG,cb=2998,nullbuf=0,lastlen=384,rejected=0,ringfill=256,presence=registered/HOME
+0301.9 EDGE,NO_RESPONSE,1.314,2.632,0.200,0.200,0.358,2,0,112,0,1.359,3.844,0,-,1
+0301.9 EDGE_DIAG,cb=3110,nullbuf=0,lastlen=384,rejected=0,ringfill=256,presence=registered/HOME
+0311.9 EDGE,NO_RESPONSE,1.212,2.011,0.200,0.208,0.138,3,0,112,0,1.359,3.844,0,-,1
+0311.9 EDGE_DIAG,cb=3222,nullbuf=0,lastlen=384,rejected=0,ringfill=256,presence=registered/HOME
+0322.0 EDGE,ACTIVE,3.669,2.968,0.250,0.256,0.330,0,0,111,0,1.359,3.844,0,-,1
+0322.0 EDGE_DIAG,cb=3333,nullbuf=0,lastlen=384,rejected=0,ringfill=256,presence=registered/HOME
+0332.0 EDGE,NO_RESPONSE,1.159,1.854,0.500,0.263,0.298,1,0,112,0,1.359,3.844,0,-,1
+0332.0 EDGE_DIAG,cb=3445,nullbuf=0,lastlen=384,rejected=0,ringfill=256,presence=registered/HOME
+0342.0 EDGE,NO_RESPONSE,0.792,2.905,0.500,0.500,0.289,2,0,111,0,1.359,3.844,0,-,1
+0342.0 EDGE_DIAG,cb=3556,nullbuf=0,lastlen=384,rejected=0,ringfill=256,presence=registered/HOME
+0352.1 EDGE,ACTIVE,4.232,2.121,0.250,0.323,0.394,0,0,111,0,1.359,3.844,0,-,1
+0352.1 EDGE_DIAG,cb=3667,nullbuf=0,lastlen=384,rejected=0,ringfill=256,presence=registered/HOME
+0362.1 EDGE,ACTIVE,1.916,2.432,0.300,0.294,0.558,0,0,111,0,1.359,3.844,0,-,0
+0362.1 EDGE_DIAG,cb=3778,nullbuf=0,lastlen=384,rejected=0,ringfill=256,presence=registered/HOME
+0372.1 EDGE,ACTIVE,2.179,1.513,0.450,0.263,0.166,0,0,111,0,1.359,3.844,0,-,1
+0372.1 EDGE_DIAG,cb=3889,nullbuf=0,lastlen=384,rejected=0,ringfill=256,presence=registered/HOME
+0382.2 EDGE,ACTIVE,3.355,1.527,0.250,0.250,0.166,0,0,111,0,1.359,3.844,0,-,1
+0382.2 EDGE_DIAG,cb=4000,nullbuf=0,lastlen=384,rejected=0,ringfill=256,presence=registered/HOME
+0391.2 EDGE,ACTIVE,1.589,1.527,0.400,0.385,0.141,0,0,112,0,1.359,3.844,0,-,0
+0391.2 EDGE_DIAG,cb=4112,nullbuf=0,lastlen=384,rejected=0,ringfill=256,presence=registered/HOME
+0401.3 EDGE,ACTIVE,1.818,1.544,0.250,0.312,0.173,0,0,112,0,1.359,3.844,0,-,0
+0401.3 EDGE_DIAG,cb=4224,nullbuf=0,lastlen=384,rejected=0,ringfill=256,presence=registered/HOME
+0411.3 EDGE,ACTIVE,20.966,2.376,0.300,0.233,0.218,0,0,111,0,1.359,3.844,0,-,1
+0411.3 EDGE_DIAG,cb=4335,nullbuf=0,lastlen=384,rejected=0,ringfill=256,presence=registered/HOME

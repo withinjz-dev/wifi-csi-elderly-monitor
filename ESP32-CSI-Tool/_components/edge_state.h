@@ -69,23 +69,44 @@
 #endif
 
 /*
- * Departure inference -- the SECONDARY away signal. edge_presence.h (phone
- * associated with the home network) is the primary one and is far more
- * reliable; this exists because the two fail differently, and because it
- * still works if the phone MAC is unset or the phone is left at home.
+ * Departure inference -- DISABLED. Kept compiled-out rather than deleted
+ * because the measurements that killed it are worth preserving alongside it.
  *
- * A window that clears the (much higher) departure threshold -- see
- * edge_baseline.h's EDGE_K_DEPARTURE -- is read as "walked past the sensor",
- * and emergency escalation is suppressed until either presence resumes (they
- * came back) or this many cycles pass with nothing seen at all, at which
- * point the assumption is dropped and normal NO_RESPONSE escalation resumes
- * -- so a mistaken "they left" guess cannot suppress a real emergency
- * forever. 4320 cycles x 10 s = 12 hours.
+ * The idea was that walking out past the sensor produces a motion burst far
+ * larger than ordinary in-room movement, so an amplitude threshold could mean
+ * "they left". A live experiment says it does not.
  *
- * Honest limitation: a quiet or distant exit never crosses the threshold, so
- * this alone would miss many real departures. That is precisely why it is
- * secondary rather than load-bearing.
+ *   First run, which appeared to support it, was invalid. The transmitter was
+ *   an Apple Watch charging OUTSIDE the room, so the exit path crossed the
+ *   line of sight between it and the receiver. Departures read 8-12 while
+ *   in-room movement read under 2.1 -- but that gap measured "crossed the
+ *   link", not "left the room". Geometry, not occupancy.
+ *
+ *   Second run used a fixed TX board inside the room and compared deliberate
+ *   line-of-sight crossings (staying inside) against real departures. Every
+ *   window across both conditions fell in 0.55-5.09 with no separation, and
+ *   the 8-12 range never reappeared. data/departure_experiment.csv.
+ *
+ * So rssi_std amplitude encodes how vigorously and how near someone moved,
+ * not whether they left. A bathroom trip past the link looks exactly like
+ * walking out the front door. No threshold separates them, which is why this
+ * is disabled rather than retuned -- the problem is the feature, not the
+ * number.
+ *
+ * Why disabled rather than merely inaccurate: away_inferred SUPPRESSES
+ * emergency escalation, and it was OR'd with the phone-presence signal, so a
+ * single false "departure" silently disarmed the alarm while the resident was
+ * in the room. Combining a reliable signal with an unreliable one under OR
+ * makes the system less safe, not more.
+ *
+ * Re-enabling would need a feature that carries direction or sequence (zone
+ * transitions, phase/Doppler), not a larger constant. Set EDGE_ENABLE_DEPARTURE
+ * to 1 to compile the original logic back in.
  */
+#ifndef EDGE_ENABLE_DEPARTURE
+#define EDGE_ENABLE_DEPARTURE 0
+#endif
+
 #define EDGE_AWAY_TIMEOUT_CYCLES 4320
 
 typedef enum {
@@ -195,10 +216,10 @@ static inline void edge_state_step(edge_state_ctx_t *c,
         c->no_data_streak++;
         /* Deliberately does NOT touch no_response_streak: a blind sensor is
          * not evidence about the person either way. */
+#if EDGE_ENABLE_DEPARTURE
     } else if (motion_feature > departure_threshold) {
-        /* A burst this large is read as "walked past the sensor", not
-         * ordinary in-room motion -- see EDGE_K_DEPARTURE. Starts (or
-         * restarts) the away-inferred window. */
+        /* Disabled by default -- measured not to separate departures from
+         * ordinary movement. See the note above EDGE_ENABLE_DEPARTURE. */
         c->no_data_streak = 0;
         out->state = EDGE_STATE_ACTIVE;
         c->no_response_streak = 0;
@@ -206,6 +227,7 @@ static inline void edge_state_step(edge_state_ctx_t *c,
         c->freq_head  = 0;
         c->away_inferred = true;
         c->away_cycles   = 0;
+#endif
     } else if (motion_feature > motion_threshold) {
         c->no_data_streak = 0;
         out->state = EDGE_STATE_ACTIVE;

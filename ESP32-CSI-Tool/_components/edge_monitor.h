@@ -160,10 +160,11 @@ static void edge_decision_task(void *arg) {
             edge_baseline_update(&edge_baseline, motion_feature, breath_score);
         }
 
-        /* Phone-MAC presence (edge_presence.h) is the primary HOME/AWAY
-         * signal; d.away_inferred (a CSI motion-burst heuristic) is a
-         * secondary, independent one. Either suppresses emergency escalation
-         * -- they fail differently, so requiring both would defeat the point. */
+        /* Phone-MAC presence is the only away signal. The CSI motion-burst
+         * heuristic that used to be OR'd in here is disabled -- measurement
+         * showed it fires on ordinary movement, and since "away" suppresses
+         * emergency escalation, an unreliable second opinion under OR removes
+         * alarms rather than adding confidence. See edge_state.h. */
         bool away = !edge_presence_is_home() || d.away_inferred;
 
         /* Emergency outranks fault: if the room is visible and respiration is
@@ -223,15 +224,23 @@ static void edge_decision_task(void *arg) {
                d.away_inferred ? 1 : 0);
 
         /* Acquisition-layer diagnostics, separate from the decision line. */
+        /* mu/sigma are printed because raw rssi_std is not comparable across
+         * sessions -- the adaptive baseline moves underneath it. Expressing a
+         * measurement as (motion - mu) / sigma is the only way to put two
+         * recordings on the same axis, and a departure-threshold experiment
+         * that skips this compares numbers that were never comparable. */
         printf("EDGE_DIAG,cb=%u,nullbuf=%u,lastlen=%u,rejected=%u,ringfill=%d,"
-               "presence=%s/%s\n",
+               "presence=%s/%s,mu=%.4f,sigma=%.4f,n=%u\n",
                (unsigned) edge_csi_cb_count,
                (unsigned) edge_csi_null_buf,
                (unsigned) edge_csi_last_len,
                (unsigned) edge_pipe.rejected_frames,
                edge_pipe.ring.filled,
                edge_presence_mode(),
-               edge_presence_is_home() ? "HOME" : "AWAY");
+               edge_presence_is_home() ? "HOME" : "AWAY",
+               edge_baseline.motion_mu,
+               edge_baseline.motion_sigma,
+               (unsigned) edge_baseline.n);
         fflush(stdout);
     }
 }
